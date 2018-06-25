@@ -1,0 +1,322 @@
+<!doctype html>
+<html lang="en">
+<head>
+<title>Shor's Algorithm and Extras</title>
+<!-- 2018-06-25 Mo 14:53 -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="generator" content="Org-mode">
+<meta name="author" content="Amir Najafgholi">
+
+<link  href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<style type="text/css">
+/* org mode styles on top of twbs */
+
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    font-size: 18px;
+    margin-bottom: 105px;
+}
+
+footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 101px;
+    background-color: #f5f5f5;
+}
+
+footer > div {
+    padding: 10px;
+}
+
+footer p {
+    margin: 0 0 5px;
+    text-align: center;
+    font-size: 16px;
+}
+
+#table-of-contents {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+blockquote p {
+    font-size: 18px;
+}
+
+pre {
+    font-size: 16px;
+}
+
+.footpara {
+    display: inline-block;
+}
+
+figcaption {
+  font-size: 16px;
+  color: #666;
+  font-style: italic;
+  padding-bottom: 15px;
+}
+
+/* from twbs docs */
+
+.bs-docs-sidebar.affix {
+    position: static;
+}
+@media (min-width: 768px) {
+    .bs-docs-sidebar {
+        padding-left: 20px;
+    }
+}
+
+/* All levels of nav */
+.bs-docs-sidebar .nav > li > a {
+    display: block;
+    padding: 4px 20px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #999;
+}
+.bs-docs-sidebar .nav > li > a:hover,
+.bs-docs-sidebar .nav > li > a:focus {
+    padding-left: 19px;
+    color: #A1283B;
+    text-decoration: none;
+    background-color: transparent;
+    border-left: 1px solid #A1283B;
+}
+.bs-docs-sidebar .nav > .active > a,
+.bs-docs-sidebar .nav > .active:hover > a,
+.bs-docs-sidebar .nav > .active:focus > a {
+    padding-left: 18px;
+    font-weight: bold;
+    color: #A1283B;
+    background-color: transparent;
+    border-left: 2px solid #A1283B;
+}
+
+/* Nav: second level (shown on .active) */
+.bs-docs-sidebar .nav .nav {
+    display: none; /* Hide by default, but at >768px, show it */
+    padding-bottom: 10px;
+}
+.bs-docs-sidebar .nav .nav > li > a {
+    padding-top: 1px;
+    padding-bottom: 1px;
+    padding-left: 30px;
+    font-size: 12px;
+    font-weight: normal;
+}
+.bs-docs-sidebar .nav .nav > li > a:hover,
+.bs-docs-sidebar .nav .nav > li > a:focus {
+    padding-left: 29px;
+}
+.bs-docs-sidebar .nav .nav > .active > a,
+.bs-docs-sidebar .nav .nav > .active:hover > a,
+.bs-docs-sidebar .nav .nav > .active:focus > a {
+    padding-left: 28px;
+    font-weight: 500;
+}
+
+/* Nav: third level (shown on .active) */
+.bs-docs-sidebar .nav .nav .nav {
+    padding-bottom: 10px;
+}
+.bs-docs-sidebar .nav .nav .nav > li > a {
+    padding-top: 1px;
+    padding-bottom: 1px;
+    padding-left: 40px;
+    font-size: 12px;
+    font-weight: normal;
+}
+.bs-docs-sidebar .nav .nav .nav > li > a:hover,
+.bs-docs-sidebar .nav .nav .nav > li > a:focus {
+    padding-left: 39px;
+}
+.bs-docs-sidebar .nav .nav .nav > .active > a,
+.bs-docs-sidebar .nav .nav .nav > .active:hover > a,
+.bs-docs-sidebar .nav .nav .nav > .active:focus > a {
+    padding-left: 38px;
+    font-weight: 500;
+}
+
+/* Show and affix the side nav when space allows it */
+@media (min-width: 992px) {
+    .bs-docs-sidebar .nav > .active > ul {
+        display: block;
+    }
+    /* Widen the fixed sidebar */
+    .bs-docs-sidebar.affix,
+    .bs-docs-sidebar.affix-bottom {
+        width: 213px;
+    }
+    .bs-docs-sidebar.affix {
+        position: fixed; /* Undo the static from mobile first approach */
+        top: 20px;
+    }
+    .bs-docs-sidebar.affix-bottom {
+        position: absolute; /* Undo the static from mobile first approach */
+    }
+    .bs-docs-sidebar.affix .bs-docs-sidenav,.bs-docs-sidebar.affix-bottom .bs-docs-sidenav {
+        margin-top: 0;
+        margin-bottom: 0
+    }
+}
+@media (min-width: 1200px) {
+    /* Widen the fixed sidebar again */
+    .bs-docs-sidebar.affix-bottom,
+    .bs-docs-sidebar.affix {
+        width: 263px;
+    }
+}
+</style>
+<script type="text/javascript">
+$(function() {
+    'use strict';
+
+    $('.bs-docs-sidebar li').first().addClass('active');
+
+    $(document.body).scrollspy({target: '.bs-docs-sidebar'});
+
+    $('.bs-docs-sidebar').affix();
+});
+</script>
+</head>
+<body>
+<div id="content" class="container">
+<div class="row"><div class="col-md-9"><h1 class="title">Shor's Algorithm and Extras</h1>
+
+<div id="outline-container-sec-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> Pre-Introduction</h2>
+<div class="outline-text-2" id="text-1">
+</div><div id="outline-container-sec-1-1" class="outline-3">
+<h3 id="sec-1-1"><span class="section-number-3">1.1</span> Post-Articlism</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+In this document we will review everything we need to implement the shor's
+Algorithm. Before even going to think about Peter Shor and his Algorithm, I will
+first like to write that how I am writing this document, Because it is somehow
+cool and post-articlism. Post-articlism means, I don't like to hand in my
+project's report as a simple PDF file with some mathematical non-alive equations
+and codes, Instead I try to make an interactive tutorial so that everyone can
+reproduce the whole project by himself by ease of just some key-binding. Or even
+one can alter part of the projects and republish it by new results.
+</p>
+</div>
+</div>
+<div id="outline-container-sec-1-2" class="outline-3">
+<h3 id="sec-1-2"><span class="section-number-3">1.2</span> Getup and Setup</h3>
+<div class="outline-text-3" id="text-1-2">
+<p>
+To write this interactive document I am using Spacemacs + org-mode + Babel, with
+the hands of these integrated tools that you are allowed to evaluate the codes and
+whole project instantly and behind the table I can export the whole document to an Ipython notebook or a
+bootstraped html page. 
+I assume you have a holly Emacs version in you computer then you probably also have org-mode and Babel pre-installed in your emacs since version 24. The only thing that you need to do is configuring emacs to make it capable of handling Julia. For this then go through the steps bellow please
+</p>
+</div>
+<div id="outline-container-sec-1-2-1" class="outline-4">
+<h4 id="sec-1-2-1"><span class="section-number-4">1.2.1</span> Add Julia layer in your code make a path to make a path to its executable file:</h4>
+<div class="outline-text-4" id="text-1-2-1">
+<pre class="example">
+(julia :variables julia-executable "/path/to/your/julia")
+</pre>
+</div>
+</div>
+<div id="outline-container-sec-1-2-2" class="outline-4">
+<h4 id="sec-1-2-2"><span class="section-number-4">1.2.2</span> Now you need to say Babel to load Julia executable.</h4>
+<div class="outline-text-4" id="text-1-2-2">
+<p>
+Babel is giving you the power of evaluating any src code inside a plain text and also many other cool features. Babel but needs to know about how to interact with Julia Repl before. For this you need to install <a href="http://ess.r-project.org/">ess </a> then you need to manually download <a href="https://github.com/gjkerns/ob-julia/blob/master/ob-julia.el">ob-julia.el</a> and place it somewhere in your home directory. Then you need to add the bellow code into your "init.el" file of in ".emacs.d" directory. This block of code will just tell Emacs to load relevant files for using Julia. 
+</p>
+
+<pre class="example">
+(require 'ess-site)
+(setq  inferior-julia-program-name "/path/to/your/julia")
+(load-file "/path/to/ob-julia.el")
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((julia . t)))
+</pre>
+
+<p>
+Yes, If you did above now you can evaluate the julia codes of this document (I mean the original org file) offline in your Emacs.<br >
+Lets begin with a simple code evaluation of Julia in
+org-mode. The below code is written in a code block then evaluated using <i>c-c c-c</i>
+key binding.
+</p>
+<div class="org-src-container">
+
+<pre class="src src-julia"><span class="linenr">1: </span>println<span style="color: #268bd2;">(</span><span style="color: #2aa198;">"this is the first line of the code using julia in Org mode and Bebel"</span><span style="color: #268bd2;">)</span>
+</pre>
+</div>
+
+<p>
+Look at the simple function bellow
+</p>
+<div class="org-src-container">
+
+<pre class="src src-julia" id="square"><span class="linenr">1: </span>x*x
+</pre>
+</div>
+
+<p>
+I can call the code block above by simply calling the "square(x=6)", and the
+result will be:
+</p>
+<pre class="example">
+36
+</pre>
+
+<p>
+For exporting to a html-bootstrap file to html-bootstrap use bellow command:
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-1-3" class="outline-3">
+<h3 id="sec-1-3"><span class="section-number-3">1.3</span> In-line Code Blocks</h3>
+<div class="outline-text-3" id="text-1-3">
+<p>
+We can evaluate a code inline, For example <code>60</code> is 10 times
+bigger than the value of "x=6" that we used in above code.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> <span class="label label-primary TODO">TODO</span> Introduction</h2>
+</div>
+</div><div class="col-md-3"><nav id="table-of-contents">
+<div id="text-table-of-contents" class="bs-docs-sidebar">
+<ul class="nav">
+<li><a href="#sec-1">1. Pre-Introduction</a>
+<ul class="nav">
+<li><a href="#sec-1-1">1.1. Post-Articlism</a></li>
+<li><a href="#sec-1-2">1.2. Getup and Setup</a></li>
+<li><a href="#sec-1-3">1.3. In-line Code Blocks</a></li>
+</ul>
+</li>
+<li><a href="#sec-2">2. Introduction</a></li>
+</ul>
+</div>
+</nav>
+</div></div></div>
+<footer id="postamble" class="">
+<div><p class="author">Author: Amir Najafgholi</p>
+<p class="date">Created: 2018-06-25 Mo 14:53</p>
+<p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 25.2.2 (<a href="http://orgmode.org">Org-mode</a> 8.2.10)</p>
+</div>
+</footer>
+</body>
+</html>

@@ -1,0 +1,69 @@
+#+TITLE: Shor's Algorithm and Extras
+#+AUTHOR: Amir Najafgholi
+
+* Pre-Introduction
+** Post-Articlism
+In this document we will review everything we need to implement the shor's
+Algorithm. Before even going to think about Peter Shor and his Algorithm, I will
+first like to write that how I am writing this document, Because it is somehow
+cool and post-articlism. Post-articlism means, I don't like to hand in my
+project's report as a simple PDF file with some mathematical non-alive equations
+and codes, Instead I try to make an interactive tutorial so that everyone can
+reproduce the whole project by himself by ease of just some key-binding. Or even
+one can alter part of the projects and republish it by new results.
+** Getup and Setup
+To write this interactive document I am using Spacemacs + org-mode + Babel, with
+the hands of these integrated tools that you are allowed to evaluate the codes and
+whole project instantly and behind the table I can export the whole document to an Ipython notebook or a
+bootstraped html page. 
+I assume you have a holly Emacs version in you computer then you probably also have org-mode and Babel pre-installed in your emacs since version 24. The only thing that you need to do is configuring emacs to make it capable of handling Julia. For this then go through the steps bellow please
+*** Add Julia layer in your code make a path to make a path to its executable file:
+#+begin_src
+(julia :variables julia-executable "/path/to/your/julia")
+#+end_src
+*** Now you need to say Babel to load Julia executable.
+Babel is giving you the power of evaluating any src code inside a plain text and also many other cool features. Babel but needs to know about how to interact with Julia Repl before. For this you need to install [[http://ess.r-project.org/][ess ]] then you need to manually download [[https://github.com/gjkerns/ob-julia/blob/master/ob-julia.el][ob-julia.el]] and place it somewhere in your home directory. Then you need to add the bellow code into your "init.el" file of in ".emacs.d" directory. This block of code will just tell Emacs to load relevant files for using Julia. 
+
+#+begin_src
+(require 'ess-site)
+(setq  inferior-julia-program-name "/path/to/your/julia")
+(load-file "/path/to/ob-julia.el")
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((julia . t)))
+#+end_src
+
+Yes, If you did above now you can evaluate the julia codes of this document (I mean the original org file) offline in your Emacs.\\
+Lets begin with a simple code evaluation of Julia in
+org-mode. The below code is written in a code block then evaluated using /c-c c-c/
+key binding.
+#+begin_src julia -n :results output
+println("this is the first line of the code using julia in Org mode and Bebel")
+#+end_src
+
+Look at the simple function bellow
+#+name: square
+#+header: :var x=0
+#+begin_src julia -n
+x*x
+#+end_src
+
+I can call the code block above by simply calling the "square(x=6)", and the
+result will be:
+#+call: square(x=6)
+
+#+RESULTS:
+: 36
+
+For exporting to a html-bootstrap file to html-bootstrap use bellow command:
+# #+begin_src lisp
+# org-twbs-export-to-html
+# #+end_src
+
+** In-line Code Blocks
+We can evaluate a code inline, For example src_julia{x= 6; 10*x} is 10 times
+bigger than the value of "x=6" that we used in above code.
+
+* TODO Introduction
+
+
