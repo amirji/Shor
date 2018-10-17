@@ -1,5 +1,5 @@
-#+TITLE: Shor's Algorithm and Extras
-#+AUTHOR: Amir Najafgholi
+#+TITLE "Shor's Algorithm and Extras"
+#+AUTHOR "Amir Najafgholi"
 
 * Pre-Introduction
 ** Post-Articlism
@@ -50,7 +50,7 @@ x*x
 
 I can call the code block above by simply calling the "square(x=6)", and the
 result will be:
-#+call: square(x=6)
+#+call square(x=6)
 
 #+RESULTS:
 : 36
@@ -64,6 +64,6 @@ For exporting to a html-bootstrap file to html-bootstrap use bellow command:
 We can evaluate a code inline, For example src_julia{x= 6; 10*x} is 10 times
 bigger than the value of "x=6" that we used in above code.
 
-* TODO Introduction
+# * TODO Introduction
 
 
